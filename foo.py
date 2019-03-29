@@ -1,165 +1,134 @@
 import random
-
+from statystyki import stats
 class Character:
-    def __init__(self, typ, int, str, hp):
-        self.typ = typ
-        self.int = int
-        self.str = str
+    def __init__(self, typ, hp):
+        self.typ = typ          #usunięty int i strg, kod do poprawy
         self.hp = hp
 class Mage(Character):
-    def __init__(self):
-        super().__init__(typ="magic", int=15, str=3, hp=52)
+    def __init__(self, mana, typ, hp):
+        super().__init__(typ, hp)
+        self.mana = mana
+    def frostBolt(self,damage):
+        print("Casting Frost Bolt !")
+        self.mana -= 15
+        return damage
 
-class Cleric(Character):
-    def __init__(self):
-        super().__init__(typ="magic", int=10, str=5, hp=67)
+class Cleric(Mage):
+    def __init__(self, typ, hp, mana):
+        super().__init__(typ, hp, mana)
+    def healingTouch(self):
+        print("Healing yourself! ")
+        self.hp += random.randint(15,40)
 
-class Warr(Character):
-    def __init__(self):
-        super().__init__(typ="mele", int=3, str=8, hp=105)
+class Warrior(Character):
+    def __init__(self,typ,hp,stamina,strg):
+        super().__init__(typ,hp)
+        self.stamina = stamina
+    def critStrike(self,strg):
+        print("Critical strike ! ")
+        self.stamina -= 10
+        strg += 20
+        return strg
 
-class Barb(Character):
-    def __init__(self):
-        super().__init__(typ="mele", int=1, str=12, hp=78)
+class Barbarian(Character):
+    def __init__(self,typ,hp,stamina,strg):
+        super().__init__(typ,hp,stamina,strg)
+    def berserkStance(self,strg,hp):
+        print("Entering Berserker Stance!")
+        self.stamina += 30
+        self.strg += 10
+
 
 class Mob:
-    def __init__(self, typ, int, str, hp):
+    def __init__(self, typ, int, strg, hp):
         self.typ = typ
-        self.int = int
-        self.str = str
         self.hp = hp
 
-class Wizz(Character):
-    def __init__(self):
-        super().__init__(typ="magic", int=11, str=4, hp=60)
+class Wizzard(Mage):
+    def __init__(self,typ,hp,mana):
+        super().__init__(typ,hp,mana)
 
-class Sham(Character):
-    def __init__(self):
-        super().__init__(typ="magic", int=9, str=8, hp=75)
+class Shaman(Mage):
+    def __init__(self,typ,hp,mana):
+        super().__init__(typ,hp,mana)
 
-class Demon(Character):
-    def __init__(self):
-        super().__init__(typ="mele", int=5, str=9, hp=90)
+class Demon(Warrior):
+    def __init__(self,typ,hp,stamina,strg):
+        super().__init__(typ,hp,stamina,strg)
+        strg += 5
 
-class Berserk(Character):
-    def __init__(self):
-        super().__init__(typ="mele", int=1, str=18, hp=70)
+class Berserk(Warrior):
+    def __init__(self,typ,hp,stamina,strg):
+        super().__init__(typ,hp,stamina,strg)
+        stamina += 5
+        strg += 3
 
-
-mag = Mage()
-cler = Cleric()
-war = Warr()
-barb = Barb()
-
-wizz = Wizz()
-shaman = Sham()
-demon = Demon()
-bers = Berserk()
 
 def profession():
-    print("What is your class ?: ")
-    print("1. Mage   type:",mag.typ,"  Intelligence:",mag.int,"  Strenght: ",mag.str,"  Health Points: ",mag.hp)
-    print("2. Cleric   type:",cler.typ,"  Intelligence:",cler.int,"  Strenght: ",cler.str,"  Health Points: ",cler.hp)
-    print("3. Warrior   type:",war.typ,"  Intelligence:",war.int,"  Strenght: ",war.str,"  Health Points: ",war.hp)
-    print("4. Barbarian   type:",barb.typ,"  Intelligence:",barb.int,"  Strenght: ",barb.str,"  Health Points: ",barb.hp)
-    p_class = input()
-    p_class = int(p_class)
-    if p_class == 1:
-        p_class = mag
-    elif p_class == 2:
-        p_class = cler
-    elif p_class == 3:
-        p_class = war
-    elif p_class == 4:
-        p_class = barb
+    loop = 1
+    while loop == 1:
+        print("What is your class ?: ")
+        print("1. Mage")
+        print("2. Cleric")
+        print("3. Warrior")
+        print("4. Barbarian")
+        print("To see statictics, type STATS")
+        p_class = input()
 
-    return p_class
+        #if p_class == "stats" or "STATS" or "Stats":
+        #    stats()
+        #   p_class = input()
+        if p_class == 1:
+            mage = Mage(random.randint(70,95), random.randint(90,120), "magic")
+            p_class = mage
+            loop = 0
+            return p_class
+        elif p_class == 2:
+            cleric = Cleric(random.randint(90,130), random.randint(60,90), "magic/healing")
+            p_class = cleric
+            return p_class
+            loop = 0
+        elif p_class == 3:
+            warrior = Warrior(random.randint(150,200), random.randint(10,18),40, "tank")
+            p_class = warrior
+            return p_class
+            loop = 0
+        elif p_class == 4:
+            barbarian = Barbarian("mele",random.randint(130,160),30,random.randint(22-30))
+            p_class = barbarian
+            return p_class
+            loop = 0
+
 
 player_class = profession()
+print(player_class)
 
 def enemy():
     for x in range(1):
         opp = random.randint(1,4)
         if opp == 1:
             opp = 'Wizzard'
-            enemy = wizz
+            wizzard = Wizzard()
+            enemy = wizzard
         elif opp == 2:
             opp = "Shaman"
+            shaman = Shaman()
             enemy = shaman
         elif opp == 3:
             opp = "Demon"
+            demon = Demon()
             enemy = demon
         elif opp == 4:
             opp = 'Berserk'
-            enemy = bers
+            berserk = Berserk()
+            enemy = berserk
         print("Your enemy is",opp,"!")
         return enemy
 
 
 enemy = enemy()
 
-def fight(player_class,enemy):
-    if enemy.typ =="mele" and player_class.typ =='mele':
-        while(player_class.hp > 0 and enemy.hp > 0):
-            player_class.hp -= enemy.str
-            print("Enemy hits you for",enemy.str,"!")
-            print("You have ",player_class.hp,"HP!")
-            if player_class.hp > 0:
-                enemy.hp -= player_class.str
-                print("You hit an enemy for",player_class.str,"!")
-                print("Enemy have ", enemy.hp, "HP!")
-        if player_class.hp <= 0:
-            print("You have been defeated!")
-        elif enemy.hp <= 0:
-            print("You win! You have still",player_class.hp,"HP!")
-        return(player_class.hp)
 
-    elif enemy.typ =="magic" and player_class.typ =='mele':
-        while (player_class.hp > 0 and enemy.hp > 0):
-            player_class.hp -= enemy.int
-            print("Enemy hits you for", enemy.int, "!")
-            print("You have ", player_class.hp, "HP!")
-            if player_class.hp > 0:
-                enemy.hp -= player_class.str
-                print("You hit an enemy for", player_class.str, "!")
-                print("Enemy have ", enemy.hp, "HP!")
-        if player_class.hp <= 0:
-            print("You have been defeated!")
-        elif enemy.hp <= 0:
-            print("You win! You have still",player_class.hp,"HP!")
-        return(player_class.hp)
-
-    elif enemy.typ =="mele" and player_class.typ =='magic':
-        while (player_class.hp > 0 and enemy.hp > 0):
-            player_class.hp -= enemy.str
-            print("Enemy hits you for", enemy.int, "!")
-            print("You have ", player_class.hp, "HP!")
-            if player_class.hp > 0:
-                enemy.hp -= player_class.int
-                print("You hit an enemy for", player_class.int, "!")
-                print("Enemy have ", enemy.hp, "HP!")
-        if player_class.hp <= 0:
-            print("You have been defeated!")
-        elif enemy.hp <= 0:
-            print("You win! You have still", player_class.hp,"HP!")
-        return(player_class.hp)
-
-    elif enemy.typ =="magic" and player_class.typ =='magic':
-        while (player_class.hp > 0 and enemy.hp > 0):
-            player_class.hp -= enemy.int
-            print("Enemy hits you for", enemy.int, "!")
-            print("You have ", player_class.hp, "HP!")
-            if player_class.hp > 0:
-                enemy.hp -= player_class.int
-                print("You hit an enemy for", player_class.int, "!")
-                print("Enemy have ",enemy.hp,"HP!")
-        if player_class.hp <= 0:
-            print("You have been defeated!")
-        elif enemy.hp <= 0:
-            print("You win! You have still",player_class.hp,"HP!")
-        return(player_class.hp)
-
-walka = fight(player_class,enemy)
 
 def elixir(hp_healed):
     player_class.hp += hp_healed
